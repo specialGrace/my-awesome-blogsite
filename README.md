@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Grace's Blog
 
 👔📱 Lifestyle • Fashion • Tech
@@ -23,3 +24,7 @@ Built with [React.js, Tailwind CSS, Markdown, Node].
 - Deployed on: [e.g., Vercel]
 
 Feel free to star ⭐ if you like it!
+=======
+# my-awesome-blogsite
+Minimalist personal blog on modern lifestyles, fashion trends, and tech insights. Thoughts on style, gadgets, and living well.
+>>>>>>> ecf5066c7db1649c7ddc2971d0c0af0c6da63f78
