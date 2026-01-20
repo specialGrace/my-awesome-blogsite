@@ -14,8 +14,15 @@ import look5 from './Images/out2.jpg';
 import look6 from './Images/out4.jpg';
 
 const PostList = () => {
-  const { posts } = useContext(BlogContext);
-  const [modalImage, setModalImage] = useState(null); // For full-screen modal
+  const { posts, setModalImage, showFullModal, setShowFullModal } = useContext(BlogContext);
+  useEffect(() => {
+    setShowFullModal(true);
+       const hasSeenSession = sessionStorage.getItem('seenWelcomeSession');
+    if (!hasSeenSession) {
+      setShowFullModal(true);
+      sessionStorage.setItem('seenWelcomeSession', 'true');
+    }
+  }, []);  
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: 'ease-out', once: true, offset: 100 });
@@ -44,32 +51,7 @@ const PostList = () => {
   ];
 
   return (
-    <>
-      {/* Full-page transparent modal */}
-      {modalImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer transition-opacity duration-500"
-          onClick={() => setModalImage(null)}
-        >
-          <div className="relative max-w-5xl max-h-full p-8">
-            <img
-              src={modalImage}
-              alt="Enlarged view"
-              className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
-            />
-            {/* Optional close button */}
-            <button
-              className="absolute top-4 right-4 text-white text-4xl opacity-70 hover:opacity-100"
-              onClick={() => setModalImage(null)}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8 py-16 md:py-24 max-w-6xl">
+    <div className="container mx-auto px-5 sm:px-6 lg:px-8 py-16 md:py-24 max-w-6xl">
         {/* Welcome Hero */}
         <section className="mb-24 md:mb-40" data-aos="fade-up">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-20 items-center">
@@ -270,7 +252,7 @@ const PostList = () => {
           </p>
         )}
       </div>
-    </>
+    
   );
 };
 
