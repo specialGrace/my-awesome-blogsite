@@ -3,7 +3,7 @@ import { SiInstagram, SiPinterest } from 'react-icons/si';  // ← Fixed import
 
 const Footer = () => {
   return (
-    <footer className="bg-site-beige/50 py-20 mt-32 border-t border-site-pink/20">
+<footer className="bg-gray/20 backdrop-blur-xl py-20 mt-32 border-t border-white/10">
       <div className="container mx-auto px-6 max-w-5xl text-center">
         <h3 className="text-4xl font-serif italic mb-8 text-text-dark">
           Let's Stay Connected ♡

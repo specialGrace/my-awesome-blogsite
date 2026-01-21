@@ -6,15 +6,14 @@ import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
 import PostEditor from './components/PostEditor';
 import Login from './components/Login';
-import { BlogContext } from './components/Context/BlogContext';import Header from './components/Header';
+import { BlogContext } from './components/Context/BlogContext';
+import Header from './components/Header';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 function App() {
-  // ALL context values must be inside the component
   const { isAuthenticated, modalImage, setModalImage, showFullModal, setShowFullModal } = useContext(BlogContext);
 
-  // Initialize AOS globally
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -26,10 +25,13 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-gray">
+
+
+      {/* Main content — REMOVE bg-gray-50 so body/gradient shows through */}
+      <div className="min-h-screen flex flex-col relative z-0">
         <Header />
 
-        <main className="flex-grow">
+        <main className="flex-grow relative z-10">
           <Routes>
             <Route path="/" element={<PostList />} />
             <Route path="/post/:id" element={<PostDetail />} />
@@ -47,76 +49,84 @@ function App() {
         </main>
 
         <Footer />
+        {/* <div
+  className="
+    fixed inset-0 z-[-1]
+    backdrop-blur-xl lg:backdrop-blur-2xl
+    pointer-events-none
+  "
+/> */}
 
-        {/* Global Modal - Rendered at the root level */}
-       {modalImage && (
-  <div
-    className={`
-      fixed inset-0 z-50 flex items-center justify-center 
-      bg-gray/95 backdrop-blur-2xl transition-all duration-500
-      ${modalImage ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-    `}
-    onClick={() => setModalImage(null)}
-  >
-    <div
-      className={`
-        relative max-w-[95vw] max-h-[92vh] p-4 sm:p-10 transition-all duration-500 ease-out
-        ${modalImage ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}
-      `}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <img
-        src={modalImage}
-        alt="Enlarged view"
-        className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10"
-      />
-
-      <button
-        className="absolute -top-4 -right-4 sm:top-6 sm:right-6 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-lg text-white text-4xl hover:bg-white/20 transition"
-        onClick={() => setModalImage(null)}
-      >
-        ×
-      </button>
-    </div>
-  </div>
-)}
-
-   {showFullModal && (
+        {/* Your image modal — unchanged but with consistent dark overlay */}
+        {modalImage && (
           <div
-            className="fixed inset-0 z-[100] bg-black/65 backdrop-blur-lg flex items-center justify-center"
+            className="
+              fixed inset-0 z-50 flex items-center justify-center
+              bg-black/50 backdrop-blur-2xl     // darker for consistency
+            "
+            onClick={() => setModalImage(null)}
+          >
+            <div
+              className="
+                relative bg-black/20 backdrop-blur-xl 
+                border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl
+                max-w-[95vw] max-h-[90vh]
+              "
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={modalImage}
+                alt="Enlarged view"
+                className="max-w-full max-h-[80vh] object-contain rounded-2xl"
+              />
+              <button
+                className="absolute top-4 right-4 text-white text-5xl hover:scale-110 transition"
+                onClick={() => setModalImage(null)}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Welcome modal — unchanged */}
+        {showFullModal && (
+          <div
+            className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-xl flex items-center justify-center"
             onClick={() => setShowFullModal(false)}
           >
             <div
-              className="relative bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-[90%] max-h-[85vh] overflow-y-auto"
+              className="relative bg-black/30 backdrop-blur-lg rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-[90%] max-h-[85vh] overflow-y-auto border border-white/10"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-4 right-5 text-4xl text-gray-700 hover:text-black"
+                className="absolute top-4 right-5 text-4xl text-white hover:text-gray-300"
                 onClick={() => setShowFullModal(false)}
               >
                 ×
               </button>
 
-              <div className="text-center py-6">
-                <h2 className="text-4xl md:text-5xl font-serif italic text-pink-600 mb-6">
+              <div className="text-center py-6 text-white">
+                <h2 className="text-4xl md:text-5xl font-serif italic text-pink-400 mb-6">
                   Welcome lovely human ♡
                 </h2>
-                <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8">
+                <p className="text-lg md:text-xl leading-relaxed mb-8">
                   This is a cozy space for style, travel, slow living & little joys.<br />
                   Make yourself at home, stay as long as you like.
                 </p>
 
                 <button
                   onClick={() => setShowFullModal(false)}
-                  className="px-10 py-4 bg-pink-500 text-white font-medium rounded-full text-lg hover:bg-pink-600 transition"
+                  className="px-10 py-4 bg-pink-600 text-white font-medium rounded-full text-lg hover:bg-pink-700 transition"
                 >
-                  Continue → 
+                  Continue →
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
+      
     </Router>
   );
 }

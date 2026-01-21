@@ -53,12 +53,12 @@ const post = { title, content, excerpt, featuredImage, category };    if (id) {
 <select
   value={category}
   onChange={(e) => setCategory(e.target.value)}
-  className="w-full p-2 mb-6 border border-site-pink/30 rounded"
+  className="w-full p-2 mb-6 border border-site-pink/30 rounded focus:border-site-pink"
 >
-  <option value="Style">Style</option>
-  <option value="Travel">Travel</option>
-  <option value="Life">Life</option>
-  <option value="Home">Home</option>
+  <option value="">Select category</option>
+  <option value="Lifestyle">Lifestyle</option>
+  <option value="Fashion">Fashion</option>
+  <option value="Tech">Tech</option>
 </select>
       <textarea
         placeholder="Content (Markdown supported)"

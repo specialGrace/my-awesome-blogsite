@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogContext } from './Context/BlogContext';
 import AOS from 'aos';
@@ -40,6 +40,27 @@ const PostList = () => {
       year: 'numeric',
     });
   };
+
+  const carouselRef = useRef(null);
+
+const scrollContainer = (direction) => {
+  if (!carouselRef.current) return;
+
+  const scrollAmount = carouselRef.current.clientWidth * 0.8; // scroll ~80% of visible width
+  const currentScroll = carouselRef.current.scrollLeft;
+
+  if (direction === 'left') {
+    carouselRef.current.scrollTo({
+      left: currentScroll - scrollAmount,
+      behavior: 'smooth',
+    });
+  } else {
+    carouselRef.current.scrollTo({
+      left: currentScroll + scrollAmount,
+      behavior: 'smooth',
+    });
+  }
+};
 
   const latestLooks = [
     { src: look1, alt: 'Soft neutral coffee date outfit', caption: 'Coffee date softness' },
@@ -194,57 +215,120 @@ const PostList = () => {
             Browse *by* Category
           </h2>
           <div className="flex flex-wrap justify-center gap-6 sm:gap-10 text-lg md:text-xl">
-            {['Style', 'Travel', 'Life', 'Home'].map((cat) => (
-              <Link
-                key={cat}
-                to={`/category/${cat.toLowerCase()}`}
-                className="hover:text-site-pink transition-colors duration-500"
-              >
-                {cat}
-              </Link>
-            ))}
+          {['Lifestyle', 'Fashion', 'Tech'].map((cat) => (
+  <Link
+    key={cat}
+    to={`/category/${cat.toLowerCase()}`}
+    className="hover:text-site-pink transition-colors duration-500"
+  >
+    {cat}
+  </Link>
+))}
           </div>
         </section>
 
-        {/* Latest Looks - Clickable + grayscale on hover */}
-        <section className="mb-20 md:mb-32" data-aos="fade-up">
-          <h2 className="text-3xl md:text-4xl font-serif italic text-center mb-10 md:mb-12">
-            *my* Latest Looks
-          </h2>
+       {/* Latest Looks - Bigger, more beautiful styles */}
+{/* Latest Looks - Horizontal Scrollable Carousel with Arrows */}
+<section className="mb-24 md:mb-40" data-aos="fade-up">
+  <h2 className="text-4xl md:text-5xl font-serif italic text-center mb-10 md:mb-14 text-text-dark">
+    *my* Latest Looks ♡
+  </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 sm:gap-6 md:gap-7">
-            {latestLooks.map((look, i) => (
-              <div
-                key={i}
-                className="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 aspect-square cursor-pointer"
-                data-aos="fade-up"
-                data-aos-delay={i * 100}
-                onClick={() => setModalImage(look.src)}
-              >
-                <img
-                  src={look.src}
-                  alt={look.alt}
-                  className="w-full h-full object-cover group-hover:grayscale transition-all duration-800 group-hover:scale-110"
-                  loading={i < 4 ? 'eager' : 'lazy'}
-                />
+  <div className="relative">
+    {/* Left Arrow */}
+    <button
+      onClick={() => scrollContainer('left')}
+      className="
+        absolute left-0 top-1/2 -translate-y-1/2 z-10
+        bg-white/80 backdrop-blur-md text-pink-600 rounded-full p-3 shadow-lg
+        hover:bg-white hover:scale-110 transition-all duration-300
+        hidden md:flex items-center justify-center
+      "
+      aria-label="Scroll left"
+    >
+      ←
+    </button>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    {/* Scrollable Container */}
+    <div
+      id="looks-carousel"
+      ref={carouselRef}
+      className="
+        flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scrollbar-hide
+        scroll-smooth
+      "
+    >
+      {latestLooks.map((look, i) => (
+        <div
+          key={i}
+          className="
+            group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl
+            transition-all duration-500 ease-out cursor-pointer flex-shrink-0
+            w-64 sm:w-72 md:w-80 lg:w-96 aspect-[4/5] sm:aspect-[3/4]
+            bg-gradient-to-br from-pink-50/40 to-purple-50/30
+            border border-white/50
+            snap-center
+          "
+          data-aos="zoom-in"
+          data-aos-delay={i * 100}
+          onClick={() => setModalImage(look.src)}
+        >
+          <img
+            src={look.src}
+            alt={look.alt}
+            className="
+              w-full h-full object-cover transition-transform duration-700
+              group-hover:scale-110 group-hover:rotate-[2deg]
+            "
+            loading={i < 4 ? 'eager' : 'lazy'}
+          />
 
-                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-600 translate-y-4 group-hover:translate-y-0">
-                  <p className="text-xs sm:text-sm font-light italic drop-shadow-md">
-                    {look.caption}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-10 md:mt-12">
-            <p className="text-text-muted italic text-lg mb-4">
-              Want to shop these looks? LTK + Amazon links coming soon ♡
+          {/* Overlay & Caption */}
+          <div className="
+            absolute inset-0 bg-gradient-to-t 
+            from-black/65 via-black/20 to-transparent 
+            opacity-0 group-hover:opacity-100 
+            transition-opacity duration-500
+          " />
+          <div className="
+            absolute inset-x-0 bottom-0 p-6 text-center text-white
+            opacity-0 group-hover:opacity-100 transition-all duration-600
+            translate-y-6 group-hover:translate-y-0
+          ">
+            <p className="text-base sm:text-lg font-light italic drop-shadow-lg">
+              {look.caption}
             </p>
           </div>
-        </section>
+        </div>
+      ))}
+    </div>
+
+    {/* Right Arrow */}
+    <button
+      onClick={() => scrollContainer('right')}
+      className="
+        absolute right-0 top-1/2 -translate-y-1/2 z-10
+        bg-white/80 backdrop-blur-md text-pink-600 rounded-full p-3 shadow-lg
+        hover:bg-white hover:scale-110 transition-all duration-300
+        hidden md:flex items-center justify-center
+      "
+      aria-label="Scroll right"
+    >
+      →
+    </button>
+
+    {/* Scroll hint on mobile */}
+    <p className="text-center text-text-muted italic mt-6 md:hidden">
+      Swipe left/right to see more looks ♡
+    </p>
+  </div>
+
+  <div className="text-center mt-12">
+    <p className="text-text-muted italic text-lg">
+      Want to shop these looks? LTK + Amazon links coming soon ♡
+    </p>
+  </div>
+</section>
 
         {posts.length === 0 && (
           <p className="text-center text-2xl md:text-3xl text-text-muted py-32" data-aos="fade-up">
