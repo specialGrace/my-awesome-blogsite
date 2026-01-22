@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BlogContext } from './Context/BlogContext';
 import AOS from 'aos';
-
-// Images
 import im1 from './Images/im1.jpg';
 import im2 from './Images/im2.jpg';
 import look1 from './Images/out1.jpg';
@@ -46,7 +44,7 @@ const PostList = () => {
 const scrollContainer = (direction) => {
   if (!carouselRef.current) return;
 
-  const scrollAmount = carouselRef.current.clientWidth * 0.8; // scroll ~80% of visible width
+  const scrollAmount = carouselRef.current.clientWidth * 0.8; 
   const currentScroll = carouselRef.current.scrollLeft;
 
   if (direction === 'left') {
@@ -76,7 +74,6 @@ const scrollContainer = (direction) => {
         {/* Welcome Hero */}
         <section className="mb-24 md:mb-40" data-aos="fade-up">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 lg:gap-20 items-center">
-            {/* Photos - Color normal → grayscale on hover */}
             <div className="order-2 md:order-1 relative h-96 md:h-[42rem] flex justify-center md:justify-end group" data-aos="fade-right" data-aos-delay="200">
               <img
                 src={im1}
@@ -161,81 +158,64 @@ const scrollContainer = (direction) => {
           </section>
         )}
 
-        {/* Recent Posts - Images also open in modal + grayscale on hover */}
-        {recentPosts.length > 0 && (
-          <section className="mb-24 md:mb-40" data-aos="fade-up">
-            <h2 className="text-3xl md:text-4xl font-serif italic text-center mb-16 md:mb-20">
-              Recently *on the* Blog
-            </h2>
-            <div className="space-y-20 md:space-y-32">
-              {recentPosts.map((post, index) => (
-                <article
-                  key={post.id}
-                  className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-center"
-                  data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
-                  data-aos-delay="200"
-                >
-                  {post.featuredImage && (
-                    <div className={`overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-700 ${index % 2 === 1 ? 'md:order-2' : ''}`}>
-                      <img
-                        src={post.featuredImage}
-                        alt={post.title}
-                        className="w-full h-64 md:h-80 lg:h-96 object-cover hover:grayscale hover:scale-105 transition-all duration-800 cursor-pointer"
-                        loading="lazy"
-                        onClick={() => setModalImage(post.featuredImage)}
-                      />
-                    </div>
-                  )}
+<section className="mb-24 md:mb-40" data-aos="fade-up">
+  <h2 className="text-3xl md:text-4xl font-serif italic text-center mb-12 md:mb-16">
+    Recently on the Blog ♡
+  </h2>
 
-                  <div className={index % 2 === 1 ? 'md:order-1' : ''}>
-                    <p className="text-text-muted italic mb-4 text-center md:text-left">
-                      {formatDate(post.createdAt)}
-                    </p>
-                    <Link to={`/post/${post.id}`}>
-                      <h3 className="text-3xl md:text-4xl font-serif italic hover:text-site-pink transition-colors mb-5 text-center md:text-left leading-tight">
-                        {post.title}
-                      </h3>
-                    </Link>
-                    <p className="text-lg text-text-muted leading-relaxed text-center md:text-left mb-6">
-                      {post.excerpt}
-                    </p>
-                    <Link to={`/post/${post.id}`} className="inline-block text-site-pink text-lg font-medium hover:underline">
-                      Continue reading →
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+    {recentPosts.map((post) => (
+      <article
+        key={post.id}
+        className="group bg-white/40 backdrop-blur-sm rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 border border-site-pink/10 flex flex-col h-full"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        {post.featuredImage ? (
+          <div className="aspect-[4/3] overflow-hidden">
+            <img
+              src={post.featuredImage}
+              alt={post.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              loading="lazy"
+            />
+          </div>
+        ) : (
+          <div className="aspect-[4/3] bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center">
+            <span className="text-6xl text-site-pink/40">♡</span>
+          </div>
         )}
 
-        {/* Categories */}
-        <section className="text-center mb-24 md:mb-40" data-aos="fade-up">
-          <h2 className="text-3xl md:text-4xl font-serif italic mb-10 md:mb-12">
-            Browse *by* Category
-          </h2>
-          <div className="flex flex-wrap justify-center gap-6 sm:gap-10 text-lg md:text-xl">
-          {['Lifestyle', 'Fashion', 'Tech'].map((cat) => (
-  <Link
-    key={cat}
-    to={`/category/${cat.toLowerCase()}`}
-    className="hover:text-site-pink transition-colors duration-500"
-  >
-    {cat}
-  </Link>
-))}
+        <div className="p-6 md:p-7 flex flex-col flex-grow">
+          <p className="text-text-muted italic text-sm mb-3">
+            {formatDate(post.createdAt)}
+          </p>
+          <h3 className="text-xl md:text-2xl font-serif italic mb-4 group-hover:text-site-pink transition-colors line-clamp-2">
+            <Link to={`/post/${post.id}`}>{post.title}</Link>
+          </h3>
+          <p className="text-text-muted text-base leading-relaxed mb-5 line-clamp-3 flex-grow">
+            {post.excerpt || post.content.slice(0, 120) + '...'}
+          </p>
+          <div className="mt-auto">
+            <Link
+              to={`/post/${post.id}`}
+              className="text-site-pink font-medium hover:underline text-sm inline-flex items-center gap-2"
+            >
+              Read more →
+            </Link>
           </div>
-        </section>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
 
-       {/* Latest Looks - Bigger, more beautiful styles */}
-{/* Latest Looks - Horizontal Scrollable Carousel with Arrows */}
 <section className="mb-24 md:mb-40" data-aos="fade-up">
   <h2 className="text-4xl md:text-5xl font-serif italic text-center mb-10 md:mb-14 text-text-dark">
     *my* Latest Looks ♡
   </h2>
 
   <div className="relative">
-    {/* Left Arrow */}
     <button
       onClick={() => scrollContainer('left')}
       className="
@@ -249,7 +229,6 @@ const scrollContainer = (direction) => {
       ←
     </button>
 
-    {/* Scrollable Container */}
     <div
       id="looks-carousel"
       ref={carouselRef}
